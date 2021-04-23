@@ -10,19 +10,7 @@ options.add_argument('-disable-dev-shm-usage')
 driver_chrome = webdriver.Chrome('chromedriver',options=options)
 # End Options chrome
 
-# Options firefox
-# firefox_options = webdriver.FirefoxOptions()
-# firefox_options.add_argument("--private")
-# driver_firefox = webdriver.Firefox(firefox_options=firefox_options, executable_path='geckodriver')
-# End Options firefox
-list_pre = {}
-with open('predirct.txt') as f:
-    for x in f:
-        list_pre[str(x).replace('\n', '')] = 1
-
-m = {}
 url = "https://www.minhchinh.com/xo-so-dien-toan-keno.html"
-driver_chrome.get(url)
 
 def telegram_bot_sendtext(bot_message):
     
@@ -34,9 +22,25 @@ def telegram_bot_sendtext(bot_message):
 
     return response.json()
 
+list_pre = {}
+from datetime import datetime
 while True:
+    
+    now = datetime.now().time()
+    if now.hour < 7 or now.hour > 22:
+        time.sleep(3600)
+        continue
+
+    if now.minute % 10 != 1:
+        time.sleep(30)
+        continue
+
+    driver_chrome.get(url)
+    m = {}
+
     time.sleep(5)
     total = 0
+    sotrung_kitruoc = ''
     for i in range(1):
         path_click = './/a[@href="javascript:chosePage('+str(i + 1)+')"]'
         try:
@@ -48,7 +52,7 @@ while True:
             checkPre = False
             for v in list_data:
                 if checkPre == False:
-                    telegram_bot_sendtext("danh sách số trúng kỳ trước = "+v.replace('#', ''))
+                    sotrung_kitruoc = v
                 for v2 in v.split():
                     if (v2.isdigit()):
                         if checkPre == False:
@@ -60,26 +64,26 @@ while True:
 
     print("so du doan trung = ", total)
     print("xac suat du doan ki truoc = ", total/len(list_pre))
-    # print("len = ", len(m))
     r_number = round(sum(m.values()) / len(m))
-    # print("trung binh = ",r_number)
-    # print(dict(sorted(m.items(), key=lambda item: item[1])))
 
     lst = []
     for k,v in m.items():
         if v == r_number-1:
             lst.append(int(k))
 
+    if len(lst) < 6:
+        for k,v in m.items():
+            if len(lst) == 10:
+                break
+            if v == r_number:
+                lst.append(int(k))
+
     lst.sort()
     print("danh sach so goi y = " , lst)
-    f = open("predirct.txt", "w")
-    for k,v in m.items():
-        if v == r_number-1:
-            f.write(k)
-            f.write('\n')
-    f.close()
-    telegram_bot_sendtext(f"số dự đoán trúng = {total}")
-    telegram_bot_sendtext(f"xác suất dự đoán kì trước = {total/len(list_pre)}")
-    telegram_bot_sendtext(f"danh sách gợi ý = {lst}")
+    telegram_bot_sendtext("danh sách số trúng kỳ trước = "+sotrung_kitruoc.replace('#', '') + f"số dự đoán trúng kì trước = {total} \n" + f"xác suất dự đoán kì trước = {total/len(list_pre)} \n" + f"danh sách gợi ý kì tới = {lst}")
+    
+    list_pre = {}
+    for k in lst:
+        list_pre[k]=1
     print("----------------------------------------------------------------------------------------------------------------------")
-    time.sleep(10*60)
+    # time.sleep(10*60)
