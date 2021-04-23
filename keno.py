@@ -34,7 +34,7 @@ while True:
 
     if isFirst == False:
         if now.minute % 10 != 2:
-            time.sleep(30)
+            time.sleep(35)
             continue
 
     isFirst = False
@@ -72,18 +72,19 @@ while True:
     lst = []
     for k,v in m.items():
         if v == r_number-1:
-            lst.append(int(k))
+            lst.append(k)
 
     if len(lst) < 6:
         for k,v in m.items():
             if len(lst) == 10:
                 break
             if v == r_number:
-                lst.append(int(k))
+                lst.append(k)
 
     lst.sort()
     print("danh sach so goi y = " , lst)
     telegram_bot_sendtext("- danh sách số trúng kỳ trước = "+sotrung_kitruoc.replace('#', '') + f"\n- số dự đoán trúng kì trước = {total} \n" + f"- xác suất dự đoán kì trước = {total/len(list_pre)} \n" + f"- danh sách gợi ý kì tới = {lst}")
+    # print("- danh sách số trúng kỳ trước = "+sotrung_kitruoc.replace('#', '') + f"\n- số dự đoán trúng kì trước = {total} \n" + f"- xác suất dự đoán kì trước = {total/len(list_pre)} \n" + f"- danh sách gợi ý kì tới = {lst}")
     
     list_pre = {}
     for k in lst:
