@@ -83,7 +83,7 @@ while True:
 
     lst.sort()
     print("danh sach so goi y = " , lst)
-    telegram_bot_sendtext("danh sách số trúng kỳ trước = "+sotrung_kitruoc.replace('#', '') + f"số dự đoán trúng kì trước = {total} \n" + f"xác suất dự đoán kì trước = {total/len(list_pre)} \n" + f"danh sách gợi ý kì tới = {lst}")
+    telegram_bot_sendtext("- danh sách số trúng kỳ trước = "+sotrung_kitruoc.replace('#', '') + f"\n- số dự đoán trúng kì trước = {total} \n" + f"- xác suất dự đoán kì trước = {total/len(list_pre)} \n" + f"- danh sách gợi ý kì tới = {lst}")
     
     list_pre = {}
     for k in lst:
