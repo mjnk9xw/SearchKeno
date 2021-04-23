@@ -22,7 +22,7 @@ def telegram_bot_sendtext(bot_message):
 
     return response.json()
 
-list_pre = {}
+list_pre = {"1":0}
 from datetime import datetime
 while True:
     
@@ -31,7 +31,7 @@ while True:
         time.sleep(3600)
         continue
 
-    if now.minute % 10 != 1:
+    if now.minute % 10 <= 2:
         time.sleep(30)
         continue
 
