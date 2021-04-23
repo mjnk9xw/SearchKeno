@@ -33,7 +33,7 @@ while True:
         continue
 
     if isFirst == False:
-        if now.minute % 10 != 1:
+        if now.minute % 10 != 2:
             time.sleep(30)
             continue
 
@@ -89,4 +89,4 @@ while True:
     for k in lst:
         list_pre[k]=1
     print("----------------------------------------------------------------------------------------------------------------------")
-    # time.sleep(10*60)
+    time.sleep(120)
