@@ -1,4 +1,5 @@
 from selenium import webdriver
+import requests
 import time
 options = webdriver.ChromeOptions()
 options.add_argument('-headless')
@@ -23,6 +24,16 @@ m = {}
 url = "https://www.minhchinh.com/xo-so-dien-toan-keno.html"
 driver_chrome.get(url)
 
+def telegram_bot_sendtext(bot_message):
+    
+    bot_token = '1748992722:AAEhV689AR6nL-kqLxvuH1mWlp6jB_9uxJQ'
+    bot_chatID = '-507701213'
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+
+    response = requests.get(send_text)
+
+    return response.json()
+
 while True:
     time.sleep(5)
     total = 0
@@ -36,6 +47,8 @@ while True:
             list_data = [str(el.text).replace('\n', ' ') for el in elements]
             checkPre = False
             for v in list_data:
+                if checkPre == False:
+                    telegram_bot_sendtext("danh sách số trúng kỳ trước = "+v.replace('#', ''))
                 for v2 in v.split():
                     if (v2.isdigit()):
                         if checkPre == False:
@@ -65,5 +78,8 @@ while True:
             f.write(k)
             f.write('\n')
     f.close()
+    telegram_bot_sendtext(f"số dự đoán trúng = {total}")
+    telegram_bot_sendtext(f"xác suất dự đoán kì trước = {total/len(list_pre)}")
+    telegram_bot_sendtext(f"danh sách gợi ý = {lst}")
     print("----------------------------------------------------------------------------------------------------------------------")
     time.sleep(10*60)
